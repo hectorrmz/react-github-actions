@@ -7,6 +7,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+     env:
+          SURGE_LOGIN: ${{ secrets.SURGE_LOGIN }}
+          SURGE_TOKEN: ${{ secrets.SURGE_TOKEN }}
     steps:
       - uses: actions/checkout@v2
       - name: Cached node_modules
@@ -30,7 +33,7 @@ jobs:
         with:
           name: code-coverage
           path: coverage
-      - name: Build Proyect
+      - name: Build Project
         if: github.event_name == 'push'
         run: npm run build
       - name: Install Surge dependency
@@ -52,8 +55,15 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Deploy to stage
-        if: github.event_name == 'push'
+        if: github.event_name == 'push' && github.ref == 'refs/heads/develop'
         run: npx surge --project ./build --domain bad-good.surge.sh
+      - name: Deploy to Prod
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        run: npx surge --project ./build --domain bad-worst.surge.sh
+      - name: Upload coverage Reports
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        run: npx code-coverage
         env:
-          SURGE_LOGIN: ${{ secrets.SURGE_LOGIN }}
-          SURGE_TOKEN: ${{ secrets.SURGE_TOKEN }}
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
+       

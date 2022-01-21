@@ -11,6 +11,8 @@ function App() {
           Edit <code>src/App.js</code> and save to reload.
         </p>
         <p>New Text deployed from Actions</p>
+
+        <p>Another deployment sucessfully created</p>
         <a
           className="App-link"
           href="https://reactjs.org"
