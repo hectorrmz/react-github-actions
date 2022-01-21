@@ -2,6 +2,8 @@ name: CI
 on:
   pull_request:
     branches: [develop]
+  push:
+    branches: [develop]
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -16,3 +18,14 @@ jobs:
       - run: npm run test -- --coverage
         env:
           CI: true
+      - name: Buold Proyect
+        if: gitgub.event_name == 'push'
+        run: npm run build
+        run: npm i -g surge
+      - name: Deploy to stage
+        if: gitgub.event_name == 'push'
+        run: npx surge --project ./build --domain bad-good.surge.sh
+        env:
+          SURGE_LOGIN: ${{ secrets.SURGE_LOGIN }}
+          SURGE_TOKEN: ${{ secrets.SURGE_TOKEN }}
+
