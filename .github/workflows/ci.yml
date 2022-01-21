@@ -18,9 +18,10 @@ jobs:
       - run: npm run test -- --coverage
         env:
           CI: true
-      - name: Buold Proyect
+      - name: Build Proyect
         if: gitgub.event_name == 'push'
         run: npm run build
+      - name: Install Surge dependency
         run: npm i -g surge
       - name: Deploy to stage
         if: gitgub.event_name == 'push'
@@ -28,4 +29,3 @@ jobs:
         env:
           SURGE_LOGIN: ${{ secrets.SURGE_LOGIN }}
           SURGE_TOKEN: ${{ secrets.SURGE_TOKEN }}
-
