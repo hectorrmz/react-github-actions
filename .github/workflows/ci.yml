@@ -7,9 +7,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-     env:
-        SURGE_LOGIN: ${{ secrets.SURGE_LOGIN }}
-        SURGE_TOKEN: ${{ secrets.SURGE_TOKEN }}
+    env:
+      SURGE_LOGIN: ${{ secrets.SURGE_LOGIN }}
+      SURGE_TOKEN: ${{ secrets.SURGE_TOKEN }}
     steps:
       - uses: actions/checkout@v2
       - name: Cached node_modules
@@ -65,5 +65,3 @@ jobs:
         run: npx code-coverage
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-
-       
