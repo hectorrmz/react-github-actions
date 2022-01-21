@@ -1,9 +1,9 @@
 name: CI
 on:
   pull_request:
-    branches: [develop]
+    branches: [develop, master]
   push:
-    branches: [develop]
+    branches: [develop, master]
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -25,11 +25,27 @@ jobs:
       - run: npm run test -- --coverage
         env:
           CI: true
+      - name: Upload Test Coverage
+        uses: actions/upload-artifact@v1
+        with:
+          name: code-coverage
+          path: coverage
       - name: Build Proyect
         if: github.event_name == 'push'
         run: npm run build
       - name: Install Surge dependency
         run: npm i -g surge
+      - name: Upload Build Folder
+        if: github.event_name == 'push'
+        uses: actions/upload-artifact@v1
+        with:
+          name: build
+          path: build
+      - name: Create Release
+        if: github.event_name == 'push' && github.red == 'refs/heads/master'
+        run: npx semantice-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Deploy to stage
         if: github.event_name == 'push'
         run: npx surge --project ./build --domain bad-good.surge.sh
