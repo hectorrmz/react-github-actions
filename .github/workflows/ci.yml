@@ -25,11 +25,22 @@ jobs:
       - run: npm run test -- --coverage
         env:
           CI: true
+      - name: Upload Test Coverage
+        uses: actions/upload-artifact@v1
+        with:
+          name: code-coverage
+          path: coverage
       - name: Build Proyect
         if: github.event_name == 'push'
         run: npm run build
       - name: Install Surge dependency
         run: npm i -g surge
+      - name: Upload Build Folder
+        uses: actions/upload-artifact@v1
+        with:
+          name: build
+          path: build
+      - uses: actions/download-artifact
       - name: Deploy to stage
         if: github.event_name == 'push'
         run: npx surge --project ./build --domain bad-good.surge.sh
