@@ -36,6 +36,7 @@ jobs:
       - name: Install Surge dependency
         run: npm i -g surge
       - name: Upload Build Folder
+        if: github.event_name == 'push'
         uses: actions/upload-artifact@v1
         with:
           name: build
